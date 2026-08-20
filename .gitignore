@@ -6,3 +6,5 @@ __pycache__/
 .env
 *.pkl
 *.joblib
+# Generated processed data
+Data/processed/*.csv
