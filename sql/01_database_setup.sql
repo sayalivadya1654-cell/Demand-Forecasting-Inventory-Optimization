@@ -1,0 +1,32 @@
+-- =====================================================
+-- DEMAND FORECASTING & INVENTORY OPTIMIZATION
+-- DATABASE SETUP
+-- =====================================================
+
+-- Create Warehouse
+CREATE WAREHOUSE IF NOT EXISTS DEMAND_FORECAST_WH
+WITH
+    WAREHOUSE_SIZE = 'X-SMALL'
+    AUTO_SUSPEND = 300
+    AUTO_RESUME = TRUE;
+
+-- Use Warehouse
+USE WAREHOUSE DEMAND_FORECAST_WH;
+
+-- Create Database
+CREATE DATABASE IF NOT EXISTS DEMAND_FORECAST_DB;
+
+-- Use Database
+USE DATABASE DEMAND_FORECAST_DB;
+
+-- Create Schema
+CREATE SCHEMA IF NOT EXISTS SALES_SCHEMA;
+
+-- Use Schema
+USE SCHEMA SALES_SCHEMA;
+
+-- Verify setup
+SELECT
+    CURRENT_WAREHOUSE() AS WAREHOUSE,
+    CURRENT_DATABASE() AS DATABASE,
+    CURRENT_SCHEMA() AS SCHEMA;
