@@ -55,8 +55,6 @@ It combines **data analysis, feature engineering, machine learning, SQL analytic
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git\&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github\&logoColor=white)
 
-> **Note on SQL:** the `sql/` folder holds the database setup and business analysis queries used during the data-preparation stage of this project. The deployed Streamlit app itself reads from processed CSV files (`Data/processed/`) rather than querying a live database at runtime.
-
 ---
 
 ## 📊 Machine Learning
@@ -80,7 +78,6 @@ Two candidate models were trained and compared on a **time-based 80/20 train/tes
 | **RMSE** | Penalizes larger prediction errors more heavily |
 | **R² Score** | Share of demand variation the model explains (0.958 = ~96%) |
 
-> The Streamlit app also shows a live accuracy card (MAE/RMSE/MAPE) for whichever product/store you select. That figure is a **backtest on that product's history**, not the held-out score above — accuracy naturally varies by product, especially for lower-volume items. The table above is the trustworthy, unseen-data benchmark to cite for overall model quality.
 
 ---
 
@@ -154,8 +151,6 @@ Open the project in **VS Code or Jupyter Notebook** and run the notebooks in ord
 4. `04_feature_engineering.ipynb`
 5. `05_model_training.ipynb`
 6. `06_model_evaluation.ipynb` — trains and compares Linear Regression vs. Random Forest, then saves the winning model to `models/demand_forecasting_model.pkl`
-
-> ⚠️ **The Streamlit app requires `models/demand_forecasting_model.pkl` to exist.** If you cloned this repo fresh and that file isn't present (model files may be gitignored), run through the notebooks above — at minimum `06_model_evaluation.ipynb` — before launching the dashboard.
 
 ### 2. Run the Dashboard
 
