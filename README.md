@@ -1,6 +1,5 @@
 # 📦 Demand Forecasting & Inventory Optimization
 
-
 > **An end-to-end Machine Learning solution for demand prediction and data-driven inventory optimization.**
 
 ## 🎯 What It Does
@@ -21,9 +20,9 @@ It combines **data analysis, feature engineering, machine learning, SQL analytic
 
 ✅ **Inventory Optimization** — Generate data-driven inventory and replenishment insights
 
-✅ **SQL Analytics** — Perform business-oriented sales and inventory analysis
+✅ **SQL Analytics** — Perform business-oriented sales and inventory analysis (see `sql/`)
 
-✅ **Interactive Dashboard** — Provide forecasting and inventory insights through Streamlit
+✅ **Interactive Dashboard** — Provide forecasting and inventory insights through Streamlit, with light/dark theme support
 
 ---
 
@@ -56,23 +55,32 @@ It combines **data analysis, feature engineering, machine learning, SQL analytic
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git\&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github\&logoColor=white)
 
+> **Note on SQL:** the `sql/` folder holds the database setup and business analysis queries used during the data-preparation stage of this project. The deployed Streamlit app itself reads from processed CSV files (`Data/processed/`) rather than querying a live database at runtime.
+
 ---
 
 ## 📊 Machine Learning
 
-The forecasting component focuses on predicting future demand from historical sales and engineered features.
+The forecasting component focuses on predicting future demand from historical sales and engineered features (lag values, rolling averages, price/discount features, calendar features, etc.).
 
-### Model Evaluation
+### Models Trained
 
-Models are evaluated using standard regression metrics:
+Two candidate models were trained and compared on a **time-based 80/20 train/test split** (the last 20% of dates, held out and never seen during training):
 
-| Metric       | Purpose                                               |
+| Model | MAE | RMSE | R² |
+|---|---|---|---|
+| Linear Regression | 11.89 | 19.74 | 0.825 |
+| **Random Forest (selected)** | **5.77** | **9.62** | **0.958** |
+
+**Random Forest was selected as the final model** and is the one powering the live dashboard (`models/demand_forecasting_model.pkl`).
+
+| Metric | Purpose |
 | ------------ | ----------------------------------------------------- |
-| **MAE**      | Measures average absolute prediction error            |
-| **RMSE**     | Penalizes larger prediction errors                    |
-| **R² Score** | Measures how well the model explains demand variation |
+| **MAE** | Average absolute prediction error, in units of demand |
+| **RMSE** | Penalizes larger prediction errors more heavily |
+| **R² Score** | Share of demand variation the model explains (0.958 = ~96%) |
 
-The best-performing model is selected based on evaluation results and used for demand prediction.
+> The Streamlit app also shows a live accuracy card (MAE/RMSE/MAPE) for whichever product/store you select. That figure is a **backtest on that product's history**, not the held-out score above — accuracy naturally varies by product, especially for lower-volume items. The table above is the trustworthy, unseen-data benchmark to cite for overall model quality.
 
 ---
 
@@ -85,6 +93,8 @@ The predicted demand can be used to support inventory planning decisions such as
 * 🔄 Replenishment planning
 * ⚠️ Stockout risk identification
 * 📉 Overstock reduction
+
+Inventory recommendations use a standard reorder-point model: `Reorder Point = (Average Daily Demand × Lead Time) + Safety Stock`, with lead time and safety stock configurable directly in the dashboard.
 
 The objective is to balance **product availability and inventory cost** using predictive analytics.
 
@@ -134,26 +144,28 @@ pip install -r requirements.txt
 
 ## ▶️ Usage
 
-### Run the Analysis
+### 1. Run the Analysis & Train the Model
 
-Open the project in **VS Code or Jupyter Notebook** and execute the notebooks for:
+Open the project in **VS Code or Jupyter Notebook** and run the notebooks in order:
 
-* Data exploration
-* Data cleaning
-* Exploratory analysis
-* Feature engineering
-* Model training
-* Model evaluation
+1. `01_data_exploration.ipynb`
+2. `02_data_cleaning.ipynb`
+3. `03_eda.ipynb`
+4. `04_feature_engineering.ipynb`
+5. `05_model_training.ipynb`
+6. `06_model_evaluation.ipynb` — trains and compares Linear Regression vs. Random Forest, then saves the winning model to `models/demand_forecasting_model.pkl`
 
-### Run the Dashboard
+> ⚠️ **The Streamlit app requires `models/demand_forecasting_model.pkl` to exist.** If you cloned this repo fresh and that file isn't present (model files may be gitignored), run through the notebooks above — at minimum `06_model_evaluation.ipynb` — before launching the dashboard.
 
-After completing the model setup:
+### 2. Run the Dashboard
+
+Once the model file exists:
 
 ```bash
 streamlit run app/app.py
 ```
 
-The application provides an interactive interface for demand forecasting and inventory-related analysis.
+The application provides an interactive interface for demand forecasting and inventory-related analysis, with a light/dark mode toggle in the sidebar.
 
 ---
 
@@ -186,7 +198,7 @@ Processed datasets are included for reproducibility where applicable.
 * Advanced time-series forecasting
 * Automated model retraining
 * Real-time inventory alerts
-* Cloud deployment
+* Cloud deployment (Streamlit Community Cloud)
 * Automated replenishment recommendations
 
 ---
