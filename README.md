@@ -1,4 +1,4 @@
-# 📦 Demand Forecasting & Inventory Optimization
+# 📦 Demand Forecasting & Inventory Optimization 
 
 > **An end-to-end Machine Learning solution for demand prediction and data-driven inventory optimization.**
 
